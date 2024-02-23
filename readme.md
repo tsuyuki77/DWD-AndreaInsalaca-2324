@@ -1,7 +1,7 @@
 # Dynamic Web Development
 
-- Academiejaar: 
-- Opleiding: 
-- Klasgroep: 
-- Naam: 
+- Academiejaar: 2023 - 2024
+- Opleiding: Bachelor Toegepaste Informatica
+- Klasgroep: 1TI5
+- Naam: Andrea Insalaca 
 

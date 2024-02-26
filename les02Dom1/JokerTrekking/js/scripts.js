@@ -19,11 +19,22 @@ function BerekeningRandom(TotaalSpelers) {
       const randomcijfer = RandomCijfer(Minimum, Maximum);
       randomcijferArray.push({ randomcijfer });
    }
-   
+   debugger;
    for (let i = 0; i < randomcijferArray.length; i++) {
-      if (randomcijferArray[i] % 10 == Trekking % 10) eencijfers++;
-      if (randomcijferArray[i] % 100 == Trekking % 100) tweeCijfers++;
-      if (randomcijferArray[i] % 1000 == Trekking % 1000) driecijfers++;
+      
+      console.log('randomcijferArray[i]:', randomcijferArray[i]);
+      console.log('Laatste cijfer randomcijferArray[i]:', randomcijferArray[i] % 10);
+      console.log('Trekking:', Trekking);
+      console.log('Laatste cijfer Trekking:', Trekking % 10);
+      
+      if ((randomcijferArray[i] % 10) == (Trekking % 10)) {
+         console.log('Overeenkomst op het laatste cijfer!');
+         eencijfers++;
+      } else {
+         console.log('Geen overeenkomst op het laatste cijfer.');
+      }      
+      if ((randomcijferArray[i] % 100) == (Trekking % 100)) tweeCijfers++;
+      if ((randomcijferArray[i] % 1000) == (Trekking % 1000)) driecijfers++;
       if (randomcijferArray[i] == Trekking) viercijfers++;
       if (randomcijferArray[i] != Trekking) geencijfers++;
    }

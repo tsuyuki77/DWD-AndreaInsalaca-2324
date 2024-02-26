@@ -28,7 +28,7 @@ function BerekeningRandom(TotaalSpelers) {
       if (randomcijferArray[i] != Trekking) geencijfers++;
    }
 }
-BerekeningRandom();
+BerekeningRandom(Spelers);
 
 // console.log('Array: ', CijferArray); // Hier wordt er de 10 000 randomcijfers getoont
 console.log('// trekking');

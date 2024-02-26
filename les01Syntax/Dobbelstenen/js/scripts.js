@@ -3,7 +3,7 @@ console.log('engines starts');
 // declarations
 // const randomcijfer = Math.random;
 const players = ['Magnus', 'Eline', 'Ding', 'Judith', 'Praggna'];
-const scores = [players.length];
+const scores = [];
 const NUM_DICE = 3;
 
 // show header
@@ -15,26 +15,23 @@ aantal deelnemers: ${players.length}`);
 // throw dice
 
 for (let i = 0; i < players.length; i++) {
-   const dice = [NUM_DICE];
-   for (let j = 0; j < NUM_DICE.length; j++) {
-      dice[j] = Math.random() * 7;
+   const dice = [];
+   for (let j = 0; j < NUM_DICE; j++) {
+      dice[j] = Math.ceil(Math.random() * 6);
    }
 
-   // getTotal -> getTotalScore
-
-   scores[i] = getTotalScore(dice);
+   scores[i] = getTotal(dice);
    console.log(`${players[i]} gooit ${scores[i]} punten`);
-   console.log(dice.toString(dice));
+   console.log(dicetoString(dice));
 }
 
 // show winner
 
-console.log('\n WINNAAR: ');
-console.log(`\n  ${getWinner(scores, players) }`);
+
 
 // 'background: yellow; color: black'
 
-function diceToString(dice) {
+function dicetoString(dice) {
    let retval = '';
    for (const d of dice) {
       switch (d) {
@@ -50,7 +47,7 @@ function diceToString(dice) {
    return retval;
 }
 
-function getTotalScore(dice) {
+function getTotal(dice) {
    let total = 0;
    for (const d of dice) {
       total += d;
@@ -61,7 +58,7 @@ function getTotalScore(dice) {
 function getWinner(totals, names) {
    let winnerIndex = 0;
    let draw = false;
-   for (let i = 1; i < totals.length; i++) {
+   for (let i = 1; i < names.length; i++) {
       if (totals[i] == totals[winnerIndex]) draw = true;
       else if (totals[i] > totals[winnerIndex]) {
          winnerIndex = i;
@@ -70,3 +67,8 @@ function getWinner(totals, names) {
    }
    return draw ? 'geen winnaar' : names[winnerIndex];
 }
+
+console.log(`
+WINNAAR:`);
+
+console.log(`\n  ${getWinner(scores, players) }`);

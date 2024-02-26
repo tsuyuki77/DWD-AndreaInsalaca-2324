@@ -8,15 +8,15 @@ let driecijfers = 0;
 let viercijfers = 0;
 let geencijfers = 0;
 
-function generateRandomNumber(min, max) {
+function RandomCijfer(min, max) {
    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-const Trekking = generateRandomNumber(Minimum, Maximum); // Trekking cijfer
+const Trekking = RandomCijfer(Minimum, Maximum); // Trekking cijfer
 
 function BerekeningRandom(TotaalSpelers) {
    const randomcijferArray = [];
    for (let i = 1; i < TotaalSpelers; i++) {
-      const randomcijfer = generateRandomNumber(Minimum, Maximum);
+      const randomcijfer = RandomCijfer(Minimum, Maximum);
       randomcijferArray.push({ randomcijfer });
    }
    

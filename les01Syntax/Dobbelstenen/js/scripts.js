@@ -1,5 +1,3 @@
-console.log('engines starts');
-
 // declarations
 // const randomcijfer = Math.random;
 const players = ['Magnus', 'Eline', 'Ding', 'Judith', 'Praggna'];
@@ -22,7 +20,7 @@ for (let i = 0; i < players.length; i++) {
 
    scores[i] = getTotal(dice);
    console.log(`${players[i]} gooit ${scores[i]} punten`);
-   console.log(dicetoString(dice));
+    console.log(`%c${dicetoString(dice)}`, 'font-size:30px');
 }
 
 // show winner
@@ -71,4 +69,4 @@ function getWinner(totals, names) {
 console.log(`
 WINNAAR:`);
 
-console.log(`\n  ${getWinner(scores, players) }`);
+console.log('%c' + getWinner(scores, players), 'padding: 10px; color: black; background-color: yellow; font-size: 16px; border: 5px double black;');

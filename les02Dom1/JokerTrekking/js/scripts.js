@@ -9,6 +9,9 @@ let driecijfers = 0;
 let viercijfers = 0;
 let geencijfers = 0;
 let winstverdeling = 0;
+const winst = [];
+const magic = 2.5;
+
 
 function RandomCijfer(min, max) {
    return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -24,29 +27,39 @@ function BerekeningRandom(TotaalSpelers) {
    for (let i = 0; i < randomcijferArray.length; i++) {
       if (randomcijferArray[i].randomcijfer % 10 === (Trekking % 10)) {
          eencijfers++;
-         winstverdeling += 2.5;
+         winst.push(magic);
       }
       if (randomcijferArray[i].randomcijfer % 100 === (Trekking % 100)) {
          tweeCijfers++;
-         winstverdeling += 10;
+         winst.push(10);
       }
       if (randomcijferArray[i].randomcijfer % 1000 === (Trekking % 1000)) {
          driecijfers++;
+         winst.push(100);
          winstverdeling += 100;
       }
       if (randomcijferArray[i].randomcijfer === Trekking) {
          viercijfers++;
-         winstverdeling += 500;
+         winst.push(500);
       }
       if (randomcijferArray[i].randomcijfer !== Trekking) {
          geencijfers++;
-         winstverdeling += 0;
       }
    }
    winstverdeling /= TotaalSpelers;
 }
 
 BerekeningRandom(Spelers);
+
+function GemiddeldeWinst() {
+   let winstTotaal = 0;
+   for (let i = 0; i < winst.length; i++) {
+      winstTotaal += winst[i];
+   }
+   return winstTotaal / Spelers;
+}
+
+winstverdeling = GemiddeldeWinst();
 
 // console.log('Array: ', CijferArray); // Hier wordt er de 10 000 randomcijfers getoont
 console.log('%c// trekking', 'color: pink; font-size: 18px;');

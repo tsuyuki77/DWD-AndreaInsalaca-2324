@@ -1,0 +1,30 @@
+html {
+   margin: 0;
+   padding: 0;
+}
+
+body{
+   background-color: #d8ccf0;
+}
+
+main{
+   margin: 2%;
+   padding: 2%;
+}
+main div{
+display: flex;
+flex-direction: row;
+flex-wrap: nowrap;
+width: 40%;
+justify-content: space-between;
+}
+
+main div section, main div form{
+   margin: 5% 5% 5% 0;
+}
+main div img{
+   width: 100%;
+   margin: 0;
+   padding: 0;
+}
+

@@ -36,13 +36,11 @@ frm.addEventListener('submit', function(e) {
       msgEmail.innerHTML = 'email mag niet leeg zijn';
       numErrors++;
    }
-
-   if (inpMeasure.value == '') {
+   else if (inpMeasure.value == '') {
       msgMeasure.innerHTML = 'Maat mag niet leeg zijn';
       numErrors++;
    }
-
-   if (numErrors != 0) {
+   else if (numErrors != 0) {
       lblMessage.innerHTML = 'Het formulier is correct ingevuld';
    } 
    else {

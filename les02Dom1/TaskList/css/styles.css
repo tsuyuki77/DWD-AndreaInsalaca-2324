@@ -11,11 +11,11 @@ html {
 }
 
 body {
-    background-color: transparent;
-    font-family: roboto;
-    font-size: 14px;
-    padding: 20px;
-    width: 100%;
+   background-color: transparent;
+   font-family: roboto;
+   font-size: 14px;
+   padding: 20px;
+   width: 100%;
 }
 
 main {
@@ -78,23 +78,23 @@ main {
 /* FORM */
 
 .button {
-    background-color: #ddd;
-    border: 1px solid;
-    color: #333;
-    cursor: pointer;
-    padding: 5px 10px;
-    text-decoration: none;
+   background-color: #ddd;
+   border: 1px solid;
+   color: #333;
+   cursor: pointer;
+   padding: 5px 10px;
+   text-decoration: none;
 }
 
 .button:hover,
 .button.active {
-    background-color: #444;
-    color: #ccc;
+   background-color: #444;
+   color: #ccc;
 }
 
 .button:active {
-    background-color: #222;
-    color: #ccc;
+   background-color: #222;
+   color: #ccc;
 }
 
 #txtTask {
@@ -125,4 +125,16 @@ input, textarea, select {
    font-family: roboto;
    font-size: 14px;
    padding: 5px 10px;
+}
+
+.kleur-green {
+   color: green !important; /* anders wilt de kleur van mijn check niet veranderen. */
+}
+
+.kleur-orange {
+   color: orange;
+}
+
+.kleur-red {
+   color: red;
 }

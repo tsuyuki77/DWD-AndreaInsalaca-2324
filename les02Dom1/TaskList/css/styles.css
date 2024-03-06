@@ -127,14 +127,23 @@ input, textarea, select {
    padding: 5px 10px;
 }
 
+/* EIGEN CODE */
 .kleur-green {
-   color: green !important; /* anders wilt de kleur van mijn check niet veranderen. */
+   color: #589720 !important; /* anders wilt de kleur van mijn check niet veranderen. */
 }
 
 .kleur-orange {
-   color: orange;
+   color: #b36817;
 }
 
 .kleur-red {
-   color: red;
+   color: #801005;
+}
+
+#tasks > .task:first-child .priority {
+   color: #589720;
+}
+
+#tasks > .task:nth-child(2) .priority {
+   color: #801005;
 }

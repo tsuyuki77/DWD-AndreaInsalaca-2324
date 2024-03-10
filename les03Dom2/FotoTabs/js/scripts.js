@@ -3,7 +3,7 @@ const gridFig = document.querySelectorAll('figure');
 const lnkView = document.querySelectorAll('.header__view a');
 const gridView = document.querySelector('#grid');
 navFilters.forEach(thn => {
-   thn.addEventListener('click', function (e) {
+   thn.addEventListener('click', function(e) {
       e.preventDefault();
       document.querySelector('.active').classList.remove('active'); // active verwijderen
       thn.classList.add('active');

@@ -14,6 +14,7 @@ ulFilters.addEventListener('click', function(e) {
    imgFilter.classList.add(filter);
    e.target.classList.add('active');
 });
+
 inpSlider.addEventListener('input', function() {
    const opacityValue = inpSlider.value;  
    imgFilter.style.opacity = opacityValue; 

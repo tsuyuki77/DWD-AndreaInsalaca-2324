@@ -1,0 +1,50 @@
+body{
+   background-color: #eeefc3;
+}
+
+.checkboxes {
+   list-style: none;
+   padding: 0;
+}
+
+.filters {
+   display: flex;
+   flex-flow: row nowrap;
+   list-style: none;
+   padding: 0;
+}
+
+.filters li {
+   margin: 0 2px;
+}
+
+.zin{
+   padding: 2%;
+   background-color: #d7d7d7;
+   color: black;
+   border: 1px solid black;
+   font-size: 28px;
+}
+button{
+   padding: 3px 10px 3px 10px;
+}
+button:hover{
+   background-color: #42423e;
+   border: #7d7d7f;
+   color: #cdcdcd;
+}
+
+.txtshdw{
+   text-shadow: -20px 20px 5px black;
+}
+
+.rainbow{
+   background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+   color: black;
+} /* code van: https://stackoverflow.com/questions/56418763/creating-the-perfect-rainbow-gradient-in-css */
+
+.reverse{
+   -webkit-transform:rotateX(180deg);
+   unicode-bidi:bidi-override;
+   direction:rtl;
+} /* code van: https://css-tricks.com/snippets/css/reversing-text/ */

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Tekststijl</title>
+   <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+   <div class="txt-wrapper">
+      <p>
+         <label id="slider-label">
+            <span>lettergrootte:</span>
+            <input type="range" min="0" max="0.28" step="0.04" value="1">
+            <span>28px</span>
+         </label>
+      </p>
+
+      <p>
+         <label id="kleur-label">
+            <span>opacity:</span>
+            <input type="color">
+         </label>
+      </p>
+
+      <ul class="checkboxes">
+         <li><input type="checkbox" name="bold" id="bold">
+            <label for="bold">vet</label>
+         </li>
+         <li><input type="checkbox" name="italics" id="italics">
+            <label for="italics">schuin</label>
+         </li>
+         <li><input type="checkbox" name="upper" id="upper">
+            <label for="upper">hoofdletters</label>
+         </li>
+      </ul>
+
+      <ul class="filters">
+         <li><button type="button" class="filter">stijl 1</button></li>
+         <li><button type="button" class="filter">stijl 2</button></li>
+         <li><button type="button" class="filter">stijl 3</button></li>
+      </ul>
+
+      <p class="zin">In the quiet of the morning, the sun painted the sky with hues of orange and pink, casting a warm glow over the sleepy town. Birds chirped, greeting the day with their melodic tunes as a gentle breeze whispered through the leaves. Meanwhile, in a cozy cafe on the corner, the aroma of freshly brewed coffee filled the air, enticing passersby with its rich fragrance. People bustled about, wrapped in scarves and jackets, their breath visible in the crisp air. Each step told a story, a journey through the tapestry of daily life, weaving connections and memories into the fabric of the bustling city.</p>
+   </div>
+   <script src="js/scripts.js"></script>
+</body>
+
+</html>

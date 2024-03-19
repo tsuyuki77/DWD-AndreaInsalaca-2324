@@ -1,0 +1,100 @@
+/* general */
+* {
+   box-sizing: border-box;
+}
+
+body {
+   font-family: roboto, sans-serif;
+   font-size: 14px;
+   padding: 20px;
+   max-width: 800px;
+}
+p, h2 {
+    margin-top: 0;
+}
+section {
+   background-color: beige;
+   margin-bottom: 20px;
+   padding: 20px;
+}
+section > div {
+   max-width: 400px;
+}
+.button {
+   background-color: #ddd;
+   border: 1px solid;
+   color: #666;
+   cursor: pointer;
+   padding: 5px 10px;
+   transition: background 0.3s, color 0.3s;
+}
+label {
+   display: block;
+}
+.button:hover {
+   background-color: #333;
+   color: #ccc;
+}
+
+/* video */
+
+.video__controls a {
+    text-decoration: none;
+}
+#vidPlayer {
+    transition: all 0.5s ease-in-out;
+    width: 100%;
+}
+.controls__volume {
+    display: flex;
+}
+#lblVolume {
+    margin: 0 10px;
+    text-align: right;
+}
+#inpVolume {
+    flex: 1;
+}
+
+/* comments */
+
+.comments__container {
+   margin-bottom: 20px;
+}
+
+.post__who {
+   color: #666;
+   font-weight: bold;
+   margin-bottom: 0.5em;
+}
+
+.who__datetime {
+   font-size: 0.8em;
+}
+
+.who__datetime::before {
+   content: "📅";
+   margin: 5px;
+}
+
+.post__text {
+   font-style: italic;
+}
+
+.post__text::before {
+   content: "“"
+}
+
+.post__text::after {
+   content: "”"
+}
+
+/* form */
+
+#frmComments input, textarea {
+   width: 100%;
+}
+#frmComments textarea {
+   resize: vertical;
+   min-height: 100px;
+}

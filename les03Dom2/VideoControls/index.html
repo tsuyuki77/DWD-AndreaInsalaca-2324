@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <title> Video custom controls demo </title>
+   <meta charset="utf-8">
+   <link rel="stylesheet" href="css/styles.css">
+   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;1,100;1,300;1,400&display=swap" rel="stylesheet">
+</head>
+
+<body>
+   <main>
+      <section class="main__video">
+         <div>
+            <h2>Ney Melo y Jennifer Bratt tango</h2>
+            <video src="media/tango.mp4" poster="img/meloYBratt.jpg" id="vidPlayer"></video>
+            <div class="video__controls">
+               <p class="controls__volume"><label for="inpVolume">volume:</label> <input type="range" min="0" max="100" value="100" id="inpVolume"> <span id="lblVolume">100</span></p>
+               <p>
+                  <a href="#" class="button" id="lnkPlay">play</a>
+                  <a href="#" class="button" id="lnkRewind">rewind</a>
+               </p>
+               <p><label><input type="checkbox" id="chbFunky"> funky version</label></p>
+            </div>
+         </div>
+      </section>
+      <section class="main__comments">
+         <div>
+            <div class="comments__container">
+               <div class="comments__post">
+                  <p class="post__who">andreaswichter <span class="who__datetime">23 november 2023 18:12</span></p>
+                  <p class="post__text">Simply beautiful. Bravo!</p>
+               </div>
+               <div class="comments__post">
+                  <p class="post__who">luissanvicenteortega7046 <span class="who__datetime">17 april 2023 18:12</span></p>
+                  <p class="post__text">Díganos representantes de su música</p>
+               </div>
+            </div>
+            <h2>Leave a comment!</h2>
+            <form id="frmComments">
+               <p>
+                  <label for="inpName">Name</label>
+                  <input type="text" id="inpName" required>
+               </p>
+               <p>
+                  <label for="inpComment">Comment</label>
+                  <textarea type="text" id="inpComment" required></textarea>
+               </p>
+               <p>
+                  <button type="submit" class="button">post</button>
+               </p>
+            </form>
+         </div>
+      </section>
+   </main>
+   <script src="js/scripts.js"></script>
+</body>
+
+</html>
+

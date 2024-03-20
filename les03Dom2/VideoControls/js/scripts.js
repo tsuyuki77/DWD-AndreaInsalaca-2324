@@ -22,6 +22,7 @@ frmVideo.addEventListener('keydown', toetsenbordFuncties);
 lnkPlay.addEventListener('click', playPauseKnop);
 lnkRewind.addEventListener('click', rewindKnop);
 inpSlider.addEventListener('input', slideBar);
+frmCommentForm.addEventListener('submit', formulier);
 
 // FUNCTIONS------------------
 function slideBar() { // slidebar + volume
@@ -53,10 +54,10 @@ function rewindKnop() { // spoelt terug naar het begin
 function playPauseKnop() {
    if (vidPlayer.paused) {
       vidPlayer.play();
-      lnkPlay.textContent = 'pause';
+      lnkPlay.innerHTML = 'pause';
    } else {
       vidPlayer.pause();
-      lnkPlay.textContent = 'play';
+      lnkPlay.innerHTML = 'play';
    }
 }
 
@@ -64,10 +65,10 @@ function toetsenbordFuncties(e) {
    if (e.keyCode == spatieBalk) { // spatiebalk
       if (vidPlayer.paused) {
          vidPlayer.play();
-         lnkPlay.textContent = 'pause';
+         lnkPlay.innerHTML = 'pause';
       } else {
          vidPlayer.pause();
-         lnkPlay.textContent = 'play';
+         lnkPlay.innerHTML = 'play';
       }
    }
    if (e.keyCode == linkerPijl) { // linker pijl - 10
@@ -78,7 +79,7 @@ function toetsenbordFuncties(e) {
    }
 }
 
-frmCommentForm.addEventListener('submit', function(e) {
+function formulier(e) {
    e.preventDefault();
    const nameTekst = inpName.value;
    const commentTekst = inpComment.value;
@@ -92,5 +93,8 @@ frmCommentForm.addEventListener('submit', function(e) {
    <p class="post__who">${nameTekst} <span class="who__datetime">${formattedDateTime}</span></p>
    <p class="post__text">${commentTekst}</p>
 </div>`;
-   commentsContainer.innerHTML += nieuweComment;
-});
+   commentsContainer.innerHTML = nieuweComment + commentsContainer.innerHTML;
+
+   inpName.value = '';
+   inpComment.value = '';
+}

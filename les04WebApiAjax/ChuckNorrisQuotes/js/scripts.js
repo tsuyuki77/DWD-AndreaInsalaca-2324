@@ -1,10 +1,10 @@
-const frmSearch = document.querySelector('#frmSearch');
+// ------------ DEFINITIONS ----------
 const selCategory = document.querySelector('#selCategory');
 const inpSearch = document.querySelector('#inpSearch');
 const btnSearch = document.querySelector('#btnSearch');
 const blockQuote = document.querySelector('.quote');
-//const API_KEY = '7d589f2c1a83276059993c9123d2426e';
 
+// ------------ FUNCTIONS ------------
 async function fetchCategories() {
    const url = 'https://api.chucknorris.io/jokes/categories';
    const resp = await fetch(url);
@@ -22,30 +22,26 @@ async function fetchRandomQuote(category) {
    return data.value;
 }
 
-/*
-async function searchQuote(searchvalue) {
+async function searchQuote(searchval) {
    const params = new URLSearchParams();
-   params.append('api_key', API_KEY);
-   params.append('method', 'flickr.groups.search');
-   params.append('text', searchvalue);
-   //params.append('format', 'json');
-   //params.append('nojsoncallback', 1);
-   const url = 'https://api.chucknorris.io/jokes/search?query=' + params.toString();
+   params.append('query', searchval);
+   const url = 'https://api.chucknorris.io/jokes/search?' + params.toString();
    const resp = await fetch(url);
    const data = await resp.json();
-   console.log(data);
+   if (data.result.length > 0) {
+      const random = Math.floor(Math.random() * data.result.length);
+      return data.result[random].value;
+   } 
 }
 
-btnSearch.addEventListener('click', function(e) {
+async function SearchBewerking(e) {
    e.preventDefault();
-   if (inpSearch.value != '') searchQuote(inpSearch.value);
-}); */
+   if (inpSearch.value != '') {
+      blockQuote.innerHTML = await searchQuote(inpSearch.value);
+   }
+}
 
-btnSearch.addEventListener('submit', async function() {
-   const keyword = inpSearch.value;
-   const quote = await searchQuote(keyword);
-   blockQuote.innerHTML = quote;
-});
+// ------------ EVENT LISTENER ------------
 
 selCategory.addEventListener('change', async function() {
    const selectedCategory = selCategory.value;
@@ -53,21 +49,15 @@ selCategory.addEventListener('change', async function() {
    blockQuote.innerHTML = quote + '<p></p><cite> -- Chuck Norris Quotes</cite>';
 });
 
-fetchCategories();
-
-async function searchQuote(searchval) {
-   const params = new URLSearchParams();
-   params.append('query', searchval);
-   const url = 'https://api.chucknorris.io/jokes/search?query=' + params.toString();
-   const resp = await fetch(url);
-   const data = await resp.json();
-   
-  
-}
-
-frmSearch.addEventListener('submit', async function(e) {
+btnSearch.addEventListener('click', function(e) {
    e.preventDefault();
-   if (inpSearch.value != '') {
-      blockQuote.innerHTML = await searchQuote(inpSearch.value);
+   SearchBewerking(e);
+});
+
+inpSearch.addEventListener('keypress', function(e) {
+   if (e.key === 'Enter') {
+      SearchBewerking(e);
    }
 });
+
+fetchCategories();

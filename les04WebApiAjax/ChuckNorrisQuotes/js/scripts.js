@@ -62,10 +62,7 @@ async function searchQuote(searchval) {
    const resp = await fetch(url);
    const data = await resp.json();
    
-   if (data.result && data.result.length > 0) {
-      const randomIndex = Math.floor(Math.random() * data.result.length);
-      return data.result[randomIndex].value;
-   } 
+  
 }
 
 frmSearch.addEventListener('submit', async function(e) {

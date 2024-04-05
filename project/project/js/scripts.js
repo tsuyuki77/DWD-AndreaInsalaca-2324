@@ -4,28 +4,31 @@ const btnSearch = document.querySelector('#btnSearch');
 
 const profielFoto = document.querySelector('#profielfoto');
 const gegevens = document.querySelector('#gegevens');
+const quoteText = document.querySelector('#randomText');
+
+// ------------ DECLARATIES ----------
+const MAGIC_16 = 16;
+
 
 // const naam = document.querySelector('#naam');
 // const locatie = document.querySelector('#locatie');
-const MAGIC_16 = 16;
-const API_KEY = '7d589f2c1a83276059993c9123d2426e';
 
 // ------------ EVENT LISTENER ------------
 btnSearch.addEventListener('click', async function(e) {
    e.preventDefault();
 
    const SHA256 = await genereerSHA256Hash(inpSearch.value);
-  const fotoUrl = await searchFoto(SHA256); // Zoekt profielfoto
-   profielFoto.innerHTML = fotoUrl;
-
- //   await searchNaam(SHA256); // Zoekt naam
- //   await searchLocatie(SHA256); // Zoekt locatie
+   profielFoto.innerHTML = searchFoto(SHA256);
+   // naam.innerHTML = await searchNaam(SHA256);
+   // locatie.innerHTML = await searchLocatie(SHA256);
    gegevens.classList.remove('hide');
+
+   randomText();
 });
 
 // ------------ FUNCTIONS ------------
 
-async function genereerSHA256Hash(email) {
+async function genereerSHA256Hash(email) { // online code voor het genereren van SHA256
    email = email.trim().toLowerCase();
    const sha256Hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(email));
    const hexHash = Array.from(new Uint8Array(sha256Hash))
@@ -34,39 +37,38 @@ async function genereerSHA256Hash(email) {
    return hexHash;
 }
 
-async function searchFoto(email) {
+function searchFoto(email) {
    const params = new URLSearchParams();
-   params.append('api_key', API_KEY);
-   params.append('method', 'flickr.photos.search');
-   params.append('text', email);
-   params.append('format', 'json');
-   params.append('nojsoncallback', 1);
-   params.append('extras', 'url_m');
-   const url = 'https://gravatar.com/avatar/' + params.toString();
-   const resp = await fetch(url);
-   const data = await resp.json();
-   console.log('data: ' + data);
+   params.append('email', email);
+   const url = 'https://gravatar.com/avatar/' + email + '?' + params.toString();
+   return `<img src="${url}" alt="profielfoto">`;
 }
-
 
 /*
 async function searchNaam(email) {
    const params = new URLSearchParams();
    params.append('query', email);
-   const url = 'https://gravatar.com/profile/' + params.toString();
+   const url = 'https://gravatar.com/profile/' + email + '.json';
    const resp = await fetch(url);
    const data = await resp.json();
-   console.log(data.name);
-  //  naam.innerHTML = data.name;
+   console.log(data);
+  // return data.entry[0].displayName;
 }
 
-
+/*
 async function searchLocatie(email) {
    const params = new URLSearchParams();
    params.append('query', email);
    const url = 'https://gravatar.com/profile/' + params.toString();
    const resp = await fetch(url);
    const data = await resp.json();
-   locatie.innerHTML = data.location;
+   return data.location;
 }
 */
+
+async function randomText() { // online random text API
+   const url = 'https://api.quotable.io/random';
+   const resp = await fetch(url);
+   const data = await resp.json();
+   quoteText.innerHTML = data.content;
+}

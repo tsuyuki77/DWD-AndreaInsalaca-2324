@@ -41,3 +41,14 @@ header section:nth-child(2) ul li{
 display: none;
 }
 
+.correct{
+   color: darkgreen;
+}
+.incorrect{
+   color: darkred;
+}
+
+.tweeKolom{
+   display: flex;
+   flex-wrap: nowrap;
+}

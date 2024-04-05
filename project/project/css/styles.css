@@ -1,7 +1,8 @@
-body{
+body {
    margin: 0;
 }
-header{
+
+header {
    display: flex;
    flex-wrap: nowrap;
    max-width: 100%;
@@ -12,18 +13,22 @@ header{
    background-color: beige;
    max-height: 10%;
 }
+
 header img {
    width: 50%;
    border-radius: 50%;
 }
-header section:nth-child(1){
+
+header section:nth-child(1) {
    max-width: 30%;
    margin: 2%;
 }
+
 header section:nth-child(2) {
    max-width: 50%;
 }
-header section:nth-child(2) ul{
+
+header section:nth-child(2) ul {
    list-style-type: none;
    display: flex;
    flex-wrap: nowrap;
@@ -32,23 +37,55 @@ header section:nth-child(2) ul{
    text-align: center;
    margin: 0;
 }
-header section:nth-child(2) ul li{
+
+header section:nth-child(2) ul li {
    height: 20%;
    width: 100%;
 }
 
-.hide {
-display: none;
+main {
+   margin: 5% auto;
+   display: flex;
+   justify-content: center;
+   align-items: center;
 }
 
-.correct{
+#formSpel {
+   min-width: 50%;
+}
+
+#formSpel input {
+   width: 100%;
+}
+
+.hide {
+   display: none;
+}
+
+input span.correct {
    color: darkgreen;
 }
-.incorrect{
+
+.incorrect {
    color: darkred;
 }
 
-.tweeKolom{
+.resultaten {
+   margin: 0;
+   padding: 0;
+}
+
+.resultaten li {
+   padding: 5px 0;
+   margin: 20px 0;
    display: flex;
    flex-wrap: nowrap;
+   flex-direction: row;
+   border-top: 1px solid black;
+   width: 100%;
+}
+
+.resultaten p {
+   padding: 0 5px;
+
 }

@@ -12,21 +12,22 @@ const pSchrijf = document.querySelector('#schrijf');
 const spnFouten = document.querySelector('#fouten');
 const spnTimer = document.querySelector('#sec');
 const stopKnop = document.querySelector('#stopKnop');
-const gebruikerKolom = document.querySelector('.tweeKolom');
+const gebruikerKolom = document.querySelector('.resultaten');
 
 // ------------ DECLARATIES ----------
 const MAGIC_16 = 16;
+let typing = false; // deze methode zorgt ervoor dat je weet wanneer je tijpt, en dus de eventListener 'keydown' moogt desable.
 let LetterPositie = 0;
 let fouten = 0;
 let second = 0;
 let count = 0;
 let timer = false;
 let GetijpteKarakters = 0;
-let totaal = 0;
+let foutPercentage = 0;
 const gebruikersNaam = inpSearch.value;
 
 // ------------ EVENT LISTENER ------------
-btnSearch.addEventListener('click', async function(e) {
+btnSearch.addEventListener('click', async function (e) {
    e.preventDefault();
    if (inpSearch.value != '') {
       const SHA256 = await genereerSHA256Hash(inpSearch.value);
@@ -36,40 +37,54 @@ btnSearch.addEventListener('click', async function(e) {
       // locatie.innerHTML = await searchLocatie(SHA256);
       // spnGebruiker.innerHTML = await searchNaam(SHA256); 
 
-      gegevens.classList.remove('hide');
-      formSpel.classList.remove('hide');
-      randomText();
+      gegevens.classList.remove('hide'); // tabel gegevens tonen
+      formSpel.classList.remove('hide'); // Spel tonen
+      randomText(); // random tekst word weergegeven
    }
 });
 
 pSchrijf.addEventListener('keydown', function(e) {
-   timer = true;
-   stopWatch();
-   if (e.key == quoteText.innerHTML[LetterPositie]) {
-      pSchrijf.innerHTML += `<span class='correct'>${e.key}</span>`;
-      const correct = new Audio('sound/correct.mp3');
-      correct.play();
-   } else if (e.key != quoteText.innerHTML[LetterPositie]) {
-      pSchrijf.innerHTML += `<span class='incorrect'>${e.key}</span>`;
-      fouten++;
-      spnFouten.innerHTML = fouten;
-      const buzz = new Audio('sound/buzz.mp3');
-      buzz.play();
-   }
-   GetijpteKarakters++;
-   LetterPositie++;
+   typing = true; // wanneer je begint te typen werkt u code
+   if (typing == true) {
+      timer = true;
+      stopWatch(); // timer start
 
-   totaal = fouten / GetijpteKarakters; 
+      if (e.key == quoteText.innerHTML[LetterPositie]) {
+         pSchrijf.innerHTML += `<span class='correct'>${e.key}</span>`;
+         const correct = new Audio('sound/correct.mp3');
+         correct.play();
+      } else if (e.key != quoteText.innerHTML[LetterPositie] && e.key != 'Backspace') {
+         pSchrijf.innerHTML += `<span class='incorrect'>${e.key}</span>`;
+         fouten++;
+         spnFouten.innerHTML = fouten;
+         const buzz = new Audio('sound/buzz.mp3');
+         buzz.play();
+      }
+
+      if (e.key == 'Backspace') {
+         LetterPositie--;
+         const correct = new Audio('sound/correct.mp3');
+         correct.play();
+      } else {
+         LetterPositie++;
+      }
+
+      GetijpteKarakters++;
+
+      foutPercentage = (fouten / GetijpteKarakters) * 100;
+   }
 });
 
 stopKnop.addEventListener('click', function() { // Toevoegen van het resultaat na het Stop-knop
-   gebruikerKolom.innerHTML += `<p>Gebruiker: ${gebruikersNaam}</p><p> - Aantal fouten: ${fouten}</p> <p> - Foutpercentage: ${totaal}</p><p> - Totale tijd: ${spnTimer.innerHTML} seconden</p>`;
+   typing = false; // je stopt het spel dus Eventlistener keydown stopt met werken.
+   gebruikerKolom.innerHTML += `<li><p>Gebruiker: ${gebruikersNaam}</p><p> Aantal fouten: ${fouten} </p><p> Foutpercentage: ${foutPercentage}</p><p> Totale tijd: ${spnTimer.innerHTML} seconden</p></li>`;
    ClearVelden();
 });
 
 formSpel.addEventListener('keydown', function(e) { // Toevoegen van het resultaat na het Escape-Knop
    if (e.key == 'Escape') {
-      gebruikerKolom.innerHTML += `<p>Gebruiker: ${gebruikersNaam}</p><p> - Aantal fouten: ${fouten}</p> <p> - Foutpercentage: ${totaal}</p><p> - Totale tijd: ${spnTimer.innerHTML} seconden</p>`;
+      typing = false; // je stopt het spel dus Eventlistener keydown stopt met werken.
+      gebruikerKolom.innerHTML += `<li><p>Gebruiker: ${gebruikersNaam}</p><p> Aantal fouten: ${fouten} </p><p> Foutpercentage: ${foutPercentage}</p><p> Totale tijd: ${spnTimer.innerHTML} seconden</p></li>`;
       ClearVelden();
    }
 });
@@ -126,6 +141,11 @@ function ClearVelden() { // leeg maken van alle nodige velden
    second = 0;
    spnTimer.innerHTML = '0';
    spnFouten.innerHTML = '0';
+   LetterPositie = 0;
+   fouten = 0;
+   count = 0;
+   GetijpteKarakters = 0;
+   foutPercentage = 0;
 }
 
 function stopWatch() {

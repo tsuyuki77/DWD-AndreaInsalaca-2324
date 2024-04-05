@@ -10,14 +10,14 @@
 
 <body>
    <header>
-      <section>
+      <div>
          <p>Email:
             <input type="text" name="mail" id="inpSearch" placeholder="example@hotmail.com">
             <button type="button" id="btnSearch">Log in</button>
          </p>
-      </section>
+      </div>
 
-      <section id="gegevens" class="hide">
+      <div id="gegevens" class="hide">
          <ul>
             <li>
                <p id="profielfoto"></p>
@@ -29,25 +29,27 @@
                <p id="locatie"></p>
             </li>
          </ul>
-      </section>
+      </div>
    </header>
 
    <main>
-      <section id="formSpel" class="hide">
+      <div id="formSpel" class="hide">
          <p id="randomText"></p>
          <input type="text" id="schrijf">
-         <div>
-            <p>Aantal fouten: <span id="fouten">0</span></p>
-            <p>Tijd: <span id="sec">0</span> seconden</p>
-         </div>
-         <div>
-            <button type="button" id="stopKnop">Stop</button>
-         </div>
-         <div>
-            <ul class="resultaten"></ul>
-         </div>
-      </section>
+         <p>Aantal fouten: <span id="fouten">0</span></p>
+         <p>Tijd: <span id="sec">0</span> seconden</p>
+         <button type="button" id="stopKnop">Stop</button>
+         <ul class="resultaten"></ul>
+      </div>
+
+      <div id="login">
+         <h1>Welkom!<br>Log eerst in!</h1>
+      </div>
    </main>
+
+   <footer>
+      <p>© copyright Typ Top, all rights reserved. By Andrea Insalaca</p>
+   </footer>
    <script src="js/scripts.js"></script>
 </body>
 

@@ -4,6 +4,7 @@ const btnSearch = document.querySelector('#btnSearch');
 const gegevens = document.querySelector('#gegevens');
 const profielFoto = document.querySelector('#profielfoto');
 const divLogin = document.querySelector('#login');
+
 // const naam = document.querySelector('#naam');
 // const locatie = document.querySelector('#locatie');
 const formSpel = document.querySelector('#formSpel');

@@ -6,6 +6,7 @@ const profielFoto = document.querySelector('#profielfoto');
 const divLogin = document.querySelector('#login');
 
 // const naam = document.querySelector('#naam');
+
 // const locatie = document.querySelector('#locatie');
 const formSpel = document.querySelector('#formSpel');
 const quoteText = document.querySelector('#randomText');
@@ -19,13 +20,17 @@ const gebruikerKolom = document.querySelector('.resultaten');
 const MAGIC_16 = 16;
 let typing = false; // deze methode zorgt ervoor dat je weet wanneer je tijpt, en dus de eventListener 'keydown' moogt desable.
 let LetterPositie = 0;
+let correct = 0;
 let fouten = 0;
 let second = 0;
 let milliseconden = 0;
 let timer = false;
 let GetijpteKarakters = 0;
-let foutPercentage = 0;
+let prestatieScore = 0;
 const gebruikersNaam = inpSearch.value;
+let timerStart = false;
+const drukKnop = new Audio('sound/correct.mp3');
+const buzz = new Audio('sound/buzz.mp3');
 
 // ------------ EVENT LISTENER ------------
 btnSearch.addEventListener('click', async function(e) {
@@ -42,40 +47,44 @@ btnSearch.addEventListener('click', async function(e) {
       formSpel.classList.remove('hide'); // Spel tonen
       randomText(); // random tekst word weergegeven
       typing = true; // wanneer je begint te typen werkt u code
+      timerStart = true;
+      inpSearch.value = '';
    }
 });
 
 pSchrijf.addEventListener('keydown', function(e) {
    if (typing == true) {
       timer = true;
-      stopWatch(); // timer start
+
+      if (timerStart == true) { // dit zorgt ervoor dat stopWatch() maar 1x wordt aangeroepen.
+         stopWatch(); // timer start
+         timerStart = false;
+      }
 
       if (e.key == quoteText.innerHTML[LetterPositie]) { // Geeft true terug als het ingevoerde letter overeenkomt met de oorspronkelijke letter in de zin.
          pSchrijf.innerHTML += `<span class='correct'>${e.key}</span>`;
-         const correct = new Audio('sound/correct.mp3');
-         correct.play();
+         drukKnop.play();
+         correct++;
       } else if (e.key != quoteText.innerHTML[LetterPositie] && e.key != 'Backspace') {
          pSchrijf.innerHTML += `<span class='incorrect'>${e.key}</span>`;
          fouten++;
          spnFouten.innerHTML = fouten;
-         const buzz = new Audio('sound/buzz.mp3');
          buzz.play();
       }
 
-      if (e.key == 'Backspace') {
+      if (e.key == 'Backspace' || e.key == 'Shift') {
          LetterPositie--;
-         const correct = new Audio('sound/correct.mp3');
-         correct.play();
+         drukKnop.play();
       } else {
          LetterPositie++;
       }
 
       GetijpteKarakters++;
-      foutPercentage = (fouten / GetijpteKarakters) * 100;
    }
 });
 
 stopKnop.addEventListener('click', function() { // Toevoegen van het resultaat na het Stop-knop
+   stopTimer(); // timer wordt gestopt
    vullingVelden();
 });
 
@@ -138,27 +147,50 @@ function ClearVelden() { // leeg maken van alle nodige velden & declaraties
    spnFouten.innerHTML = '0';
    LetterPositie = 0;
    fouten = 0;
+   correct = 0;
    milliseconden = 0;
    GetijpteKarakters = 0;
-   foutPercentage = 0;
 }
+
+let timerInterval; // Voeg een variabele toe om de interval bij te houden
 
 function stopWatch() {
    if (timer == true) {
-      milliseconden++;
-      if (milliseconden == 100) {
-         second++;
-         milliseconden = 0;
-      }
-      setTimeout(stopWatch, 10);
-      spnTimer.innerHTML = second;
+      timerInterval = setInterval(updateTimer, 10); // timer wordt om de 10 ms bijgewerkt.
    }
+}
+function updateTimer() {
+   milliseconden++;
+   if (milliseconden == 100) {
+      second++;
+      milliseconden = 0;
+   }
+   spnTimer.innerHTML = second;
+}
+
+function stopTimer() {
+   clearInterval(timerInterval); // timer te stoppen
 } // logica vanuit deze website: https://www.geeksforgeeks.org/how-to-create-stopwatch-using-html-css-and-javascript/ 
 
 function vullingVelden() {
    if (quoteText.innerHTML != '') {
+      stopTimer(); // je stopt de timer
       typing = false; // je stopt het spel dus Eventlistener keydown stopt met werken.
-      const prestatieScore = ((GetijpteKarakters - fouten) / GetijpteKarakters) * 10; // bijvoorbeeld (50 letters & 7 fouten): 50 - 7 -> 43 / 50 -> 0.86 * 10 -> 8.6
+      const typsnelheid = correct / parseInt(spnTimer.innerHTML); // (Aantal correct getypte karakters) / (Tijd in seconden)
+      const foutPercentage = (fouten / GetijpteKarakters) * 100; // Foutenpercentage berekenen
+
+      if (correct > parseInt(spnTimer.innerHTML)) { // Je bent sneller dan het voorziene tijd
+         prestatieScore = 10 - (foutPercentage / 10);
+      } else { // Je bent trager dan het voorziene tijd
+         prestatieScore = 10 - (foutPercentage / 10) - typsnelheid;
+      }
+
+      if (prestatieScore < 0) prestatieScore = 0; // als het kleiner dan nul is dan is u score 0
+
+      console.log(`typsnelheid: ${typsnelheid.toFixed(2)}
+      GetijpteKarakters: ${GetijpteKarakters}
+      correct: ${correct}`);
+
       gebruikerKolom.innerHTML += `<li>
     <p><strong>Gebruiker:</strong>${gebruikersNaam}</p>
     <p><strong>Aantal fouten:</strong> ${fouten}</p>
@@ -166,6 +198,17 @@ function vullingVelden() {
     <p><strong>Totale tijd:</strong> ${spnTimer.innerHTML} seconden</p>
     <p><strong>Prestatiescore:</strong> ${prestatieScore.toFixed(2)} / 10</p>
  </li>`;
-      ClearVelden();
+
+     // localStorage(); // toevoegen van gegevens in localStorage
    }
+   ClearVelden();
 }
+
+/* function localStorage() {
+   const person = {
+      name: naam,
+      score: prestatieScore
+   };
+   localStorage.setItem('person', JSON.stringify(person));
+} */
+

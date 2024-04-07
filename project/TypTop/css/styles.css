@@ -9,7 +9,7 @@ input, button{
    font-family: monospace;
 }
 
-header {
+header nav {
    display: flex;
    flex-wrap: nowrap;
    max-width: 100%;

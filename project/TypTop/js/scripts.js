@@ -2,12 +2,10 @@
 const inpSearch = document.querySelector('#inpSearch');
 const btnSearch = document.querySelector('#btnSearch');
 const gegevens = document.querySelector('#gegevens');
-const profielFoto = document.querySelector('#profielfoto');
 const divLogin = document.querySelector('#login');
-
-// const naam = document.querySelector('#naam');
-
-// const locatie = document.querySelector('#locatie');
+const profielFoto = document.querySelector('#profielfoto');
+const naam = document.querySelector('#naam');
+const locatie = document.querySelector('#locatie');
 const formSpel = document.querySelector('#formSpel');
 const quoteText = document.querySelector('#randomText');
 const inputInvul = document.querySelector('#schrijf');
@@ -15,6 +13,7 @@ const spnFouten = document.querySelector('#fouten');
 const spnTimer = document.querySelector('#sec');
 const stopKnop = document.querySelector('#stopKnop');
 const gebruikerKolom = document.querySelector('.resultaten');
+const lnkNotify = document.querySelector('#lnkNotify');
 
 // ------------ DECLARATIES ----------
 let typing = false; // deze methode zorgt ervoor dat je weet wanneer je tijpt, en dus de eventListener 'keydown' moogt desable.
@@ -27,30 +26,49 @@ let timer = false;
 let timerInterval;
 let GetijpteKarakters = 0;
 let prestatieScore = 0;
-let gebruikersemail;
 let timerStart = false;
-
-// ------------ FUNCTIE OPROEPING ----------
-randomText(); // random tekst word weergegeven. Ik voeg het hier toe omdat het tijd kost om te laden.
+let dataAfb;
 
 // ------------ FUNCTIONS ------------
+
+async function handleNotificatie(title, msg, icon) {
+   if (Notification.permission == 'granted') {
+      new Notification(title, { body: msg, icon: icon });
+   } else if (Notification.permission != 'denied') {
+      const permission = await Notification.requestPermission();
+      if (permission == 'granted') {
+         new Notification(title, { body: msg, icon: icon });
+      }
+   }
+}
+
+function showNotificatie() {
+   if (prestatieScore < 5) handleNotificatie('Jammer!', `Spijtig voor u ${prestatieScore} / 10, volgende keer beter!`, `${dataAfb}`);
+   if (prestatieScore > 5) handleNotificatie('Proficiat!', `Goed gespeelt, je behaalde ${prestatieScore} / 10, probeer meer!`, `${dataAfb}`);
+   if (prestatieScore == 10) handleNotificatie('Gefeliciteerd !!', `Je zit op het podium met u ${prestatieScore} / 10 !`, `${dataAfb}`);
+}
+
 async function handleZoekKnop(e) {
    e.preventDefault();
-   if (inpSearch.value != '') {
-      const SHA256 = await genereerSHA256Hash(inpSearch.value);
-      profielFoto.innerHTML = searchFoto(SHA256);
+   naam.innerHTML = '';
+   locatie.innerHTML = '';
+   profielFoto.innerHTML = '';
 
-      // naam.innerHTML = await searchNaam(SHA256);
-      // locatie.innerHTML = await searchLocatie(SHA256);
-      // spnGebruiker.innerHTML = await searchNaam(SHA256); 
+   const SHA256 = await genereerSHA256Hash(inpSearch.value);
+   await searchGegevens(SHA256); // Wacht tot de zoekactie is voltooid
+
+   if (naam.innerHTML != '' && locatie.innerHTML != '' && profielFoto.innerHTML != '') {
+      randomText();
       divLogin.classList.add('hide');
-      gegevens.classList.remove('hide'); // tabel gegevens tonen
-      formSpel.classList.remove('hide'); // Spel tonen
-
-      typing = true; // wanneer je begint te typen werkt u code
+      gegevens.classList.remove('hide');
+      formSpel.classList.remove('hide');
+      typing = true;
       timerStart = true;
-      gebruikersemail = inpSearch.value;
       inpSearch.value = '';
+      inputInvul.disabled = false; // enable de input om in te vullen
+   } else if (naam.innerHTML == '' && locatie.innerHTML == '' && profielFoto.innerHTML == '') {
+      divLogin.classList.remove('hide');
+      divLogin.innerHTML = '<h1>Verkeerde mail!<br>Probeer Opnieuw!</h1>';
    }
 }
 
@@ -112,31 +130,15 @@ async function genereerSHA256Hash(email) { // online code voor het genereren van
    return hexHash;
 }
 
-function searchFoto(email) {
-   const params = new URLSearchParams();
-   params.append('email', email);
-   const url = 'https://gravatar.com/avatar/' + email + '?' + params.toString();
-   return `<img src='${url}' alt='profielfoto'>`;
-}
-
-/*
-async function searchNaam(email) {
-   const params = new URLSearchParams();
-   params.append('query', email);
-   const url = 'https://gravatar.com/profile/' + email + '.json';
+async function searchGegevens(sha256Email) {
+   const url = 'https://gravatar.com/' + sha256Email + '.json';
    const resp = await fetch(url);
    const data = await resp.json();
-   return data.entry[0].displayName;
+   naam.innerHTML = data.entry[0].preferredUsername;
+   locatie.innerHTML = data.entry[0].currentLocation;
+   profielFoto.innerHTML = `<img src='${data.entry[0].photos[0].value}' alt='profielfoto'>`;
+   dataAfb = data.entry[0].photos[0].value;
 }
-
-async function searchLocatie(email) {
-   const params = new URLSearchParams();
-   params.append('query', email);
-   const url = 'https://gravatar.com/profile/' + params.toString();
-   const resp = await fetch(url);
-   const data = await resp.json();
-   return data.location;
-} */
 
 async function randomText() { // online random text API
    const url = 'https://api.quotable.io/random';
@@ -155,7 +157,8 @@ function ClearVelden() { // leeg maken van alle nodige velden & declaraties
    correct = 0;
    milliseconden = 0;
    GetijpteKarakters = 0;
-   quoteText.innerHTML = ''; // haal de quote weg
+   quoteText.innerHTML = 'Log weer in om verder te spelen!'; // haal de quote weg en zeg dat je weer moet inloggen
+   inputInvul.disabled = true;
    inputInvul.value = null;
 }
 
@@ -180,7 +183,6 @@ function stopTimer() {
 function vullingVelden() {
    if (quoteText.innerHTML != '') {
       stopTimer(); // je stopt de timer
-      quoteText.innerHTML = ''; // haal de quote weg
       typing = false; // je stopt het spel dus Eventlistener keydown stopt met werken.
       const typsnelheid = correct / parseInt(spnTimer.innerHTML); // (Aantal correct getypte karakters) / (Tijd in seconden)
       const foutPercentage = (fouten / GetijpteKarakters) * 100; // Foutenpercentage berekenen
@@ -191,13 +193,14 @@ function vullingVelden() {
       if (prestatieScore < 0) prestatieScore = 0; // als het kleiner dan nul is dan is u score 0
 
       gebruikerKolom.innerHTML += `<li>
-    <p><strong>Gebruiker:</strong> ${gebruikersemail}</p>
+    <p><strong>Gebruiker:</strong> ${naam.innerHTML}</p>
     <p><strong>Aantal fouten:</strong> ${fouten}</p>
     <p><strong>Foutpercentage:</strong> ${foutPercentage.toFixed(2)}%</p>
     <p><strong>Totale tijd:</strong> ${spnTimer.innerHTML} seconden</p>
     <p><strong>Prestatiescore:</strong> ${prestatieScore.toFixed(2)} / 10</p>
  </li>`;
 
+      showNotificatie();
       localStorageInvul(); // toevoegen van gegevens in localStorage
    }
 }
@@ -211,7 +214,7 @@ function localStorageInvul() {
    const datum = new Date(); // Huidige datum/tijd
 
    const person = {
-      name: gebruikersemail,
+      name: naam.innerHTML,
       score: prestatieScore.toFixed(2),
       datum: datum.getDate() + '/' + (datum.getMonth() + 1) + '/' + datum.getFullYear(), // Datum in dd/mm/jjjj 
       tijd: datum.getHours() + ':' + (datum.getMinutes() < 10 ? '0' : '') + datum.getMinutes() // Tijd in hh:mm
@@ -232,3 +235,5 @@ btnSearch.addEventListener('click', handleZoekKnop);
 inputInvul.addEventListener('keydown', handleInputInvul);
 stopKnop.addEventListener('click', handleStopKnop);
 formSpel.addEventListener('keydown', handleResult);
+lnkNotify.addEventListener('click', handleNotificatie);
+

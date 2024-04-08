@@ -2,42 +2,41 @@
    --txt-color: rgb(67, 67, 67);
 }
 body {
-   margin: 0;
    font-family: monospace;
+   margin: 0;
 }
 input, button{
    font-family: monospace;
 }
 
 header nav {
-   display: flex;
-   flex-wrap: nowrap;
-   max-width: 100%;
-   margin: 0;
-   padding: 0;
-   justify-content: space-between;
    align-items: center;
    background-color: beige;
+   display: flex;
+   flex-wrap: nowrap;
+   justify-content: space-between;
+   margin: 0;
    max-height: 10%;
+   max-width: 100%;
+   padding: 0;
 }
 
-#login{
-   position: absolute;
-   margin: auto;
-   font-size: 20px;
+
+#login {
    color: var(--txt-color);
+   font-size: 20px;
+   margin: auto;
    text-align: center;
-   top: 40%;
 }
 
 header img {
-   width: 50%;
    border-radius: 50%;
+   width: 50%;
 }
 
 header div:nth-child(1) {
-   max-width: 30%;
    margin: 2%;
+   max-width: 30%;
 }
 
 header div:nth-child(2) {
@@ -45,26 +44,31 @@ header div:nth-child(2) {
 }
 
 header div:nth-child(2) ul {
-   list-style-type: none;
+   align-items: center;
    display: flex;
    flex-wrap: nowrap;
    justify-content: space-between;
-   align-items: center;
-   text-align: center;
    margin: 0;
+   list-style-type: none;
+   text-align: center;
 }
 
 header div:nth-child(2) ul li {
    height: 20%;
-   width: 100%;
+   padding: 10px;
+   width: max-content;
 }
 
 main {
-   margin: 5% auto;
-   display: flex;
-   justify-content: center;
    align-items: center;
+   display: flex;
+   /* stylelint-disable-next-line value-no-vendor-prefix */
+   height: -webkit-fill-available;
+   justify-content: center;
+   position: absolute;
+   width: 100%;
 }
+
 
 #formSpel {
    min-width: 50%;
@@ -96,12 +100,12 @@ input span.correct {
 }
 
 .resultaten li {
-   padding: 5px 0;
-   margin: 10px 0;
-   display: flex;
-   flex-wrap: nowrap;
-   flex-direction: row;
    border-top: 1px solid var(--txt-color);
+   display: flex;
+   flex-direction: row;
+   flex-wrap: nowrap;
+   margin: 10px 0;
+   padding: 5px 0;
    width: 100%;
 }
 
@@ -110,17 +114,17 @@ input span.correct {
 }
 
 footer {
-   position: absolute;
-   bottom: 0;
-   left: 0;
-   width: 100%;
-   height: 55px;
    background-color: beige;
-   text-align: center;
+   bottom: 0;
    color: var(--txt-color);
+   height: 55px;
+   left: 0;
+   position: absolute;
+   text-align: center;
+   width: 100%;
 }
 
 footer p {
-   padding: 5px 0;
    bottom: 0;
+   padding: 5px 0;
 }

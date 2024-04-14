@@ -27,25 +27,44 @@ let timerInterval;
 let GetijpteKarakters = 0;
 let prestatieScore = 0;
 let timerStart = false;
+
+let title = '';
+let msg = '';
 let dataAfb;
 
 // ------------ FUNCTIONS ------------
 
-async function handleNotificatie(title, msg, icon) {
-   if (Notification.permission == 'granted') {
-      new Notification(title, { body: msg, icon: icon });
-   } else if (Notification.permission != 'denied') {
-      const permission = await Notification.requestPermission();
-      if (permission == 'granted') {
-         new Notification(title, { body: msg, icon: icon });
-      }
+function showNotificatie(title, msg, dataAfb) {
+   new Notification(title, { body: msg, icon: dataAfb });
+}
+
+function NotificatieContent() {
+   if (prestatieScore < 5) {
+      title = 'Jammer!';
+      msg = `Spijtig voor u ${prestatieScore} / 10, volgende keer beter!`;
+   } else if (prestatieScore > 5) {
+      title = 'Proficiat!';
+      msg = `Goed gespeeld, je behaalde ${prestatieScore} / 10, probeer meer!`;
+   } else if (prestatieScore == 10) {
+      title = 'Gefeliciteerd !!';
+      msg = `Je zit op het podium met u ${prestatieScore} / 10 !`;
    }
 }
 
-function showNotificatie() {
-   if (prestatieScore < 5) handleNotificatie('Jammer!', `Spijtig voor u ${prestatieScore} / 10, volgende keer beter!`, `${dataAfb}`);
-   if (prestatieScore > 5) handleNotificatie('Proficiat!', `Goed gespeelt, je behaalde ${prestatieScore} / 10, probeer meer!`, `${dataAfb}`);
-   if (prestatieScore == 10) handleNotificatie('Gefeliciteerd !!', `Je zit op het podium met u ${prestatieScore} / 10 !`, `${dataAfb}`);
+function handleNotificatie() {
+   if (prestatieScore == 0) return;
+   NotificatieContent(); // voegt de content in titel, msg, en icon (dataAfb)
+   if (Notification.permission == 'granted') {
+      showNotificatie(title, msg, dataAfb);
+      console.log('het werkt');
+   } else if (Notification.permission == 'denied') {
+      Notification.requestPermission(function(permission) {
+         if (permission == 'granted') {
+            showNotificatie(title, msg, dataAfb);
+            console.log('het werkt');
+         }
+      });
+   }
 }
 
 async function handleZoekKnop(e) {
@@ -66,7 +85,7 @@ async function handleZoekKnop(e) {
       timerStart = true;
       inpSearch.value = '';
       inputInvul.disabled = false; // enable de input om in te vullen
-   } else if (naam.innerHTML == '' && locatie.innerHTML == '' && profielFoto.innerHTML == '') {
+   } else {
       divLogin.classList.remove('hide');
       divLogin.innerHTML = '<h1>Verkeerde mail!<br>Probeer Opnieuw!</h1>';
    }
@@ -109,6 +128,8 @@ function handleInputInvul(e) {
 
 function handleStopKnop() { // Toevoegen van het resultaat na het Stop-knop
    vullingVelden();
+   handleNotificatie(); // notificatie popt
+   localStorageInvul(); // toevoegen van gegevens in localStorage
    ClearVelden();
 }
 
@@ -199,9 +220,6 @@ function vullingVelden() {
     <p><strong>Totale tijd:</strong> ${spnTimer.innerHTML} seconden</p>
     <p><strong>Prestatiescore:</strong> ${prestatieScore.toFixed(2)} / 10</p>
  </li>`;
-
-      showNotificatie();
-      localStorageInvul(); // toevoegen van gegevens in localStorage
    }
 }
 

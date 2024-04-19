@@ -14,7 +14,6 @@ const spnTimer = document.querySelector('#sec');
 const stopKnop = document.querySelector('#stopKnop');
 const checkboxes = document.querySelectorAll('.checkboxes input');
 const gebruikerKolom = document.querySelector('.resultaten');
-const lnkNotify = document.querySelector('#lnkNotify');
 
 // ------------ DECLARATIES ----------
 let typing = false; // deze methode zorgt ervoor dat je weet wanneer je tijpt, en dus de eventListener 'keydown' moogt desable.
@@ -30,45 +29,7 @@ let GetijpteKarakters = 0;
 let prestatieScore = 0;
 let timerStart = false;
 
-let title = '';
-let msg = '';
-let dataAfb;
-
 // ------------ FUNCTIONS ------------
-
-function showNotificatie(title, msg, dataAfb) {
-   new Notification(title, { body: msg, icon: dataAfb });
-}
-
-function NotificatieContent() {
-   if (prestatieScore < 5) {
-      title = 'Jammer!';
-      msg = `Spijtig voor u ${prestatieScore} / 10, volgende keer beter!`;
-   } else if (prestatieScore > 5) {
-      title = 'Proficiat!';
-      msg = `Goed gespeeld, je behaalde ${prestatieScore} / 10, probeer meer!`;
-   } else if (prestatieScore == 10) {
-      title = 'Gefeliciteerd !!';
-      msg = `Je zit op het podium met u ${prestatieScore} / 10 !`;
-   }
-}
-
-function handleNotificatie() {
-   if (prestatieScore == 0) return;
-   NotificatieContent(); // voegt de content in titel, msg, en icon (dataAfb)
-   if (Notification.permission == 'granted') {
-      showNotificatie(title, msg, dataAfb);
-      console.log('het werkt');
-   } else if (Notification.permission == 'denied') {
-      Notification.requestPermission(function(permission) {
-         if (permission == 'granted') {
-            showNotificatie(title, msg, dataAfb);
-            console.log('het werkt');
-         }
-      });
-   }
-}
-
 
 async function handleZoekKnop(e) {
    e.preventDefault();
@@ -131,7 +92,6 @@ function handleInputInvul(e) {
 
 function handleStopKnop() { // Toevoegen van het resultaat na het Stop-knop
    vullingVelden();
-   handleNotificatie(); // notificatie popt
    localStorageInvul(); // toevoegen van gegevens in localStorage
    ClearVelden();
 }
@@ -176,7 +136,6 @@ async function searchGegevens(sha256Email) {
    naam.innerHTML = data.entry[0].preferredUsername;
    locatie.innerHTML = data.entry[0].currentLocation;
    profielFoto.innerHTML = `<img src='${data.entry[0].photos[0].value}' alt='profielfoto'>`;
-   dataAfb = data.entry[0].photos[0].value;
 }
 
 async function randomText() { // online random text API
@@ -254,8 +213,6 @@ function vullingVelden() {
     <p><strong>Totale tijd:</strong> ${spnTimer.innerHTML} seconden</p>
     <p><strong>Prestatiescore:</strong> ${prestatieScore.toFixed(2)} / 10</p>
  </li>`;
-
-   handleNotificatie(prestatieScore);
    }
 }
 
@@ -289,7 +246,6 @@ btnSearch.addEventListener('click', handleZoekKnop);
 inputInvul.addEventListener('keydown', handleInputInvul);
 stopKnop.addEventListener('click', handleStopKnop);
 formSpel.addEventListener('keydown', handleResult);
-lnkNotify.addEventListener('click', handleNotificatie);
 checkboxes.forEach(checkbox => {
    checkbox.addEventListener('change', handleCheckbox);
 });

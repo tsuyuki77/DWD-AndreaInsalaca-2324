@@ -69,6 +69,7 @@ function handleNotificatie() {
    }
 }
 
+
 async function handleZoekKnop(e) {
    e.preventDefault();
    naam.innerHTML = '';
@@ -253,6 +254,8 @@ function vullingVelden() {
     <p><strong>Totale tijd:</strong> ${spnTimer.innerHTML} seconden</p>
     <p><strong>Prestatiescore:</strong> ${prestatieScore.toFixed(2)} / 10</p>
  </li>`;
+
+   handleNotificatie(prestatieScore);
    }
 }
 

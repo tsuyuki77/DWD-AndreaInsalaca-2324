@@ -1,11 +1,13 @@
 :root {
    --txt-color: rgb(67, 67, 67);
 }
+
 body {
    font-family: monospace;
    margin: 0;
 }
-input, button{
+
+input, button {
    font-family: monospace;
 }
 
@@ -74,7 +76,7 @@ main {
    min-width: 50%;
 }
 
-#formSpel input {
+#schrijf {
    width: 100%;
 }
 
@@ -82,7 +84,7 @@ main {
    display: none;
 }
 
-input span.correct {
+.correct {
    color: darkgreen;
 }
 
@@ -92,6 +94,33 @@ input span.correct {
 
 #stopKnop {
    margin-bottom: 5px;
+}
+
+.checkboxes {
+   display: flex;
+   flex-flow: row nowrap;
+   list-style: none;
+   padding: 0;
+}
+.checkboxes li{
+   display: flex;
+   align-content: center;
+   padding-right: 10px;
+}
+
+.shadow {
+   text-shadow: 0px 0px 10px black;
+   color: white;
+}
+
+.blur {
+   filter: blur(1px);
+}
+
+.reverse {
+   -webkit-transform: rotateX(180deg);
+   unicode-bidi: bidi-override;
+   direction: rtl;
 }
 
 .resultaten {

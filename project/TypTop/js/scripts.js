@@ -12,12 +12,14 @@ const inputInvul = document.querySelector('#schrijf');
 const spnFouten = document.querySelector('#fouten');
 const spnTimer = document.querySelector('#sec');
 const stopKnop = document.querySelector('#stopKnop');
+const checkboxes = document.querySelectorAll('.checkboxes input');
 const gebruikerKolom = document.querySelector('.resultaten');
 const lnkNotify = document.querySelector('#lnkNotify');
 
 // ------------ DECLARATIES ----------
 let typing = false; // deze methode zorgt ervoor dat je weet wanneer je tijpt, en dus de eventListener 'keydown' moogt desable.
 let LetterPositie = 0;
+let KarakterArray;
 let correct = 0;
 let fouten = 0;
 let second = 0;
@@ -77,15 +79,11 @@ async function handleZoekKnop(e) {
    await searchGegevens(SHA256); // Wacht tot de zoekactie is voltooid
 
    if (naam.innerHTML != '' && locatie.innerHTML != '' && profielFoto.innerHTML != '') {
-      randomText();
-      divLogin.classList.add('hide');
-      gegevens.classList.remove('hide');
-      formSpel.classList.remove('hide');
-      typing = true;
-      timerStart = true;
-      inpSearch.value = '';
-      inputInvul.disabled = false; // enable de input om in te vullen
+      randomText(); // random tekst word weergegeven
+      StartVelden(); // velden worden getoont en uiteraard ge-reset
    } else {
+      gegevens.classList.add('hide'); // gegevens tonen
+      formSpel.classList.add('hide'); // spel tonen
       divLogin.classList.remove('hide');
       divLogin.innerHTML = '<h1>Verkeerde mail!<br>Probeer Opnieuw!</h1>';
    }
@@ -95,7 +93,7 @@ function handleInputInvul(e) {
    const drukKnop = new Audio('sound/correct.mp3');
    const buzz = new Audio('sound/buzz.mp3');
 
-   if (LetterPositie == quoteText.innerHTML.length - 1) handleStopKnop();
+   if (LetterPositie == KarakterArray.length - 1) handleStopKnop();
 
    if (typing == true) {
       timer = true;
@@ -104,12 +102,16 @@ function handleInputInvul(e) {
          timerStart = false;
       }
 
-      if (e.key == quoteText.innerHTML[LetterPositie]) { // Geeft true terug als het ingevoerde letter overeenkomt met de oorspronkelijke letter in de zin.
-         inputInvul.innerHTML += `<span class="correct">${e.key}</span>`;
+      const VoorlopigLetter = quoteText.querySelector(`span:nth-child(${LetterPositie + 1})`);
+
+      if (e.key == KarakterArray[LetterPositie]) { // Geeft true terug als het ingevoerde letter overeenkomt met de oorspronkelijke letter in de zin.
+         VoorlopigLetter.classList.remove('correct'); // verwijder zou er dit element er al zijn
+         VoorlopigLetter.classList.remove('incorrect'); // verwijder zou er dit element er al zijn
+         VoorlopigLetter.classList.add('correct');
          drukKnop.play();
          correct++;
-      } else if (e.key != quoteText.innerHTML[LetterPositie] && e.key != 'Backspace') {
-         inputInvul.innerHTML += `<span class="incorrect">${e.key}</span>`;
+      } else if (e.key != KarakterArray[LetterPositie] && e.key != 'Backspace') {
+         VoorlopigLetter.classList.add('incorrect');
          fouten++;
          spnFouten.innerHTML = fouten;
          buzz.play();
@@ -140,6 +142,21 @@ function handleResult(e) { // Toevoegen van het resultaat na het Escape-Knop
    }
 }
 
+function handleCheckbox(e) {
+   quoteText.classList.remove('shadow', 'blur', 'reverse');
+
+   const label = e.target.parentNode.querySelector('label');
+   if (e.target.checked == true) {
+      if (label.innerHTML == 'Challenge 1') {
+         quoteText.classList.add('shadow');
+      } else if (label.innerHTML == 'Challenge 2') {
+         quoteText.classList.add('blur');
+      } else if (label.innerHTML == 'Challenge 3') {
+         quoteText.classList.add('reverse');
+      }
+   }
+}
+
 
 async function genereerSHA256Hash(email) { // online code voor het genereren van SHA256
    const MAGIC_16 = 16;
@@ -165,9 +182,24 @@ async function randomText() { // online random text API
    const url = 'https://api.quotable.io/random';
    const resp = await fetch(url);
    const data = await resp.json();
-   quoteText.innerHTML = data.content.toLowerCase();
+   const tekst = data.content.toLowerCase();
+   KarakterArray = tekst.split(''); // tekst word gesplits in een char-array
+   // Voeg elk karakter toe aan de paragraaf als een span-element
+   KarakterArray.forEach(karakter => {
+      quoteText.innerHTML += `<span>${karakter}</span>`;
+   });
 }
-
+function StartVelden() {
+   divLogin.classList.add('hide'); // begin tekst verwijderen
+   gegevens.classList.remove('hide'); // gegevens tonen
+   formSpel.classList.remove('hide'); // spel tonen
+   quoteText.innerHTML = ''; // maak u veld eerst leeg
+   typing = true;
+   timerStart = true;
+   inpSearch.value = '';
+   inputInvul.disabled = false; // enable de input om in te vullen
+   stopKnop.disabled = false; // enable het stop-Knop
+}
 function ClearVelden() { // leeg maken van alle nodige velden & declaraties
    timer = false;
    second = 0;
@@ -181,6 +213,7 @@ function ClearVelden() { // leeg maken van alle nodige velden & declaraties
    quoteText.innerHTML = 'Log weer in om verder te spelen!'; // haal de quote weg en zeg dat je weer moet inloggen
    inputInvul.disabled = true;
    inputInvul.value = null;
+   stopKnop.disabled = true;
 }
 
 function stopWatch() {
@@ -254,4 +287,6 @@ inputInvul.addEventListener('keydown', handleInputInvul);
 stopKnop.addEventListener('click', handleStopKnop);
 formSpel.addEventListener('keydown', handleResult);
 lnkNotify.addEventListener('click', handleNotificatie);
-
+checkboxes.forEach(checkbox => {
+   checkbox.addEventListener('change', handleCheckbox);
+});

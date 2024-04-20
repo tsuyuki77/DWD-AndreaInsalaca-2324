@@ -14,6 +14,7 @@ const spnTimer = document.querySelector('#sec');
 const stopKnop = document.querySelector('#stopKnop');
 const checkboxes = document.querySelectorAll('.checkboxes input');
 const gebruikerKolom = document.querySelector('.resultaten');
+const lnkNotify = document.querySelector('#lnkNotify');
 
 // ------------ DECLARATIES ----------
 let typing = false; // deze methode zorgt ervoor dat je weet wanneer je tijpt, en dus de eventListener 'keydown' moogt desable.
@@ -28,6 +29,7 @@ let timerInterval;
 let GetijpteKarakters = 0;
 let prestatieScore = 0;
 let timerStart = false;
+let dataAfb;
 
 // ------------ FUNCTIONS ------------
 
@@ -55,7 +57,7 @@ function handleInputInvul(e) {
    const drukKnop = new Audio('sound/correct.mp3');
    const buzz = new Audio('sound/buzz.mp3');
 
-   if (LetterPositie == KarakterArray.length - 1) handleStopKnop();
+   if (LetterPositie == KarakterArray.length - 1) handleStopKnop(); // als het laatste letter word getypt, dan word de functie opgroepen om te stoppen
 
    if (typing == true) {
       timer = true;
@@ -92,6 +94,7 @@ function handleInputInvul(e) {
 
 function handleStopKnop() { // Toevoegen van het resultaat na het Stop-knop
    vullingVelden();
+   handleNotificatie(); // notificatie popt
    localStorageInvul(); // toevoegen van gegevens in localStorage
    ClearVelden();
 }
@@ -102,22 +105,6 @@ function handleResult(e) { // Toevoegen van het resultaat na het Escape-Knop
       ClearVelden();
    }
 }
-
-function handleCheckbox(e) {
-   quoteText.classList.remove('shadow', 'blur', 'reverse');
-
-   const label = e.target.parentNode.querySelector('label');
-   if (e.target.checked == true) {
-      if (label.innerHTML == 'Challenge 1') {
-         quoteText.classList.add('shadow');
-      } else if (label.innerHTML == 'Challenge 2') {
-         quoteText.classList.add('blur');
-      } else if (label.innerHTML == 'Challenge 3') {
-         quoteText.classList.add('reverse');
-      }
-   }
-}
-
 
 async function genereerSHA256Hash(email) { // online code voor het genereren van SHA256
    const MAGIC_16 = 16;
@@ -133,6 +120,7 @@ async function searchGegevens(sha256Email) {
    const url = 'https://gravatar.com/' + sha256Email + '.json';
    const resp = await fetch(url);
    const data = await resp.json();
+   dataAfb = data.entry[0].photos[0].value;
    naam.innerHTML = data.entry[0].preferredUsername;
    locatie.innerHTML = data.entry[0].currentLocation;
    profielFoto.innerHTML = `<img src='${data.entry[0].photos[0].value}' alt='profielfoto'>`;
@@ -240,12 +228,68 @@ function localStorageInvul() {
    localStorage.setItem('persons', JSON.stringify(personen));
 }
 
+// ------------ EIGEN CODE (EXTRA CODE)------------
+
+function handleCheckbox(e) {
+   quoteText.classList.remove('shadow', 'blur', 'reverse');
+
+   checkboxes.forEach(checkbox => {
+      checkbox.checked = false; // deselecteer alle checkboxes zodat de gebruiker er maar 1 kan gebruiken
+   });
+
+   e.target.checked = true; // Selecteer alleen de huidige checkbox
+
+   const label = e.target.parentNode.querySelector('label');
+   if (e.target.checked == true) {
+      if (label.innerHTML == 'Challenge 1') {
+         quoteText.classList.add('shadow');
+      } else if (label.innerHTML == 'Challenge 2') {
+         quoteText.classList.add('blur');
+      } else if (label.innerHTML == 'Challenge 3') {
+         quoteText.classList.add('reverse');
+      }
+   }
+}
+
+function showNotificatie(title, msg, dataAfb) { // NOTIFICATIE WERKT OP FIREFOX
+   new Notification(title, { body: msg, icon: dataAfb });
+}
+
+function NotificatieContent() {
+   let title = '';
+   let msg = '';
+   if (prestatieScore < 5) {
+      title = 'Jammer!';
+      msg = `Spijtig voor u ${prestatieScore} / 10, volgende keer beter!`;
+   } else if (prestatieScore > 5) {
+      title = 'Proficiat!';
+      msg = `Goed gespeeld, je behaalde ${prestatieScore} / 10, probeer meer!`;
+   } else if (prestatieScore == 10) {
+      title = 'Gefeliciteerd !!';
+      msg = `Je zit op het podium met u ${prestatieScore} / 10 !`;
+   }
+   return { title, msg }; // return van meerdere waarden geleerd dankzij ChatGPT
+}
+
+function handleNotificatie() {
+   if (prestatieScore == 0) return;
+   const { title, msg } = NotificatieContent();
+   console.log(title, msg, dataAfb); // toont als bewijs dat alles is gelinkt
+   Notification.requestPermission(function(permission) {
+      if (permission === 'granted') {
+         showNotificatie(title, msg, dataAfb);
+      }
+   });
+   if (Notification.permission == 'denied') return;
+}
+
 // ------------ EVENT LISTENER ------------
 
 btnSearch.addEventListener('click', handleZoekKnop);
 inputInvul.addEventListener('keydown', handleInputInvul);
 stopKnop.addEventListener('click', handleStopKnop);
 formSpel.addEventListener('keydown', handleResult);
+lnkNotify.addEventListener('click', handleNotificatie);
 checkboxes.forEach(checkbox => {
    checkbox.addEventListener('change', handleCheckbox);
 });
